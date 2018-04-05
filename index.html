@@ -15,7 +15,7 @@
         var myPlayer;
 
         function startGame() {
-            myPlayer = new component(10, 50, "blue", 25, 25);
+            myPlayer = new component(10, 50, "red", 25, 25);
             myGameArea.start();
 
         }
@@ -47,8 +47,8 @@
         }
 
         function updateGameArea() {
-            myGameArea.clear();
-            myGamePiece.update();
+
+            myPlayer.update();
         }
     </script>
 </body>
