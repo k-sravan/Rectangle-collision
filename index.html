@@ -49,14 +49,24 @@
             this.speedY = 0;
             this.width = width;
             this.height = height;
-            //this.gravitySpeed = 0;
-            //this.gravity = 1;
+            this.gravity = 2;
+            this.gravitySpeed = 10;
             this.update = function() {
                 ctx = myGameArea.context;
                 ctx.fillStyle = color;
                 ctx.fillRect(this.x, this.y, this.width, this.height);
 
             }
+            //position
+            this.newPos = function() {
+                this.gravitySpeed += this.gravity;
+                this.x += this.speedX;
+                this.y += this.speedY + this.gravity;
+                this.collison();
+                this.collison_1();
+
+            }
+
             //left and right
             this.collison = function() {
                 var collision = myGameArea.canvas.width - this.width;
@@ -76,30 +86,23 @@
                     this.y = 0;
                 }
             }
-            //position
-            this.newPos = function() {
-                this.gravitySpeed += this.gravity;
-                this.x += this.speedX;
-                this.y += this.speedY //+= this.gravitySpeed;
-                this.collison();
-                this.collison_1();
-            }
+
         }
 
         function updateGameArea() {
             myGameArea.clear();
             myPlayer.speedX = 0;
             myPlayer.speedY = 0;
-            if (myGameArea.keys && myGameArea.keys[37]) {
+            if ((myGameArea.keys && myGameArea.keys[37]) || (myGameArea.keys && myGameArea.keys[65])) {
                 myPlayer.speedX = -4;
             }
-            if (myGameArea.keys && myGameArea.keys[39]) {
+            if ((myGameArea.keys && myGameArea.keys[39]) || (myGameArea.keys && myGameArea.keys[68])) {
                 myPlayer.speedX = 4;
             }
-            if (myGameArea.keys && myGameArea.keys[38]) {
+            if ((myGameArea.keys && myGameArea.keys[38]) || (myGameArea.keys && myGameArea.keys[32])) {
                 myPlayer.speedY = -4;
             }
-            if (myGameArea.keys && myGameArea.keys[40]) {
+            if ((myGameArea.keys && myGameArea.keys[40]) || (myGameArea.keys && myGameArea.keys[83])) {
                 myPlayer.speedY = 4;
             }
             myPlayer.update();
