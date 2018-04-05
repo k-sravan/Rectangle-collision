@@ -26,29 +26,29 @@
                 this.canvas.height = 400;
                 this.context = this.canvas.getContext("2d");
                 document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-                this.interval=setInterval();
+                this.interval = setInterval(updateGameArea, 20);
             },
-             clear : function() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
+            clear: function() {
+                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
         }
 
-        function component(x, y, color, width, height); {
+        function component(x, y, color, width, height) {
             this.x = x;
             this.y = y;
             this.width = width;
             this.height = height;
             this.update = function() {
                 ctx = myGameArea.context;
-                ctx.fillRule=color;
+                ctx.fillRule = color;
                 ctx.fillRect(this.x, this.y, this.width, this.height);
-        
+
             }
         }
 
         function updateGameArea() {
-            myPlayer.update();
-
+            myGameArea.clear();
+            myGamePiece.update();
         }
     </script>
 </body>
