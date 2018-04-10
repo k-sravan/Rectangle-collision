@@ -7,19 +7,21 @@
             border: 5px solid black;
             background: lightskyblue;
         }
-
     </style>
 </head>
 
 <body onload="startGame()">
     <script>
-        var myPlayer;   
+        var myPlayer;
         var myBridge;
+        var myBackground;
 
         function startGame() {
             //declared as(x,y, color,width,height)
             myPlayer = new component(20, 100, "blue", 30, 30);
-            myBridge = new component(150, 350, "red", 100, 10);
+            myBridge = new component(150, 150, "red", 100, 100);
+            myBridge = new component(150, 150, "red", 100, 100);
+            myBackground = new component(600, 400, "background.png", 0, 0, "image");
             myGameArea.start();
 
         }
@@ -44,7 +46,12 @@
             }
         }
 
-        function component(x, y, color, width, height) {
+        function component(x, y, color, width, height, type) {
+            this.type = type;
+            if (type == "image") {
+                this.image = new Image();
+                this.image.src = color;
+            }
             this.x = x;
             this.y = y;
             this.speedX = 0;
@@ -55,8 +62,12 @@
             this.gravitySpeed = 10;
             this.update = function() {
                 ctx = myGameArea.context;
-                ctx.fillStyle = color;
-                ctx.fillRect(this.x, this.y, this.width, this.height);
+                if (type == "image") {
+                    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+                } else {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                }
 
             }
             //position
@@ -64,13 +75,14 @@
                 this.gravitySpeed += this.gravity;
                 this.x += this.speedX;
                 this.y += this.speedY + this.gravity;
-                this.collison();
-                this.collison_1();
+                this.collision();
+                this.collision_1();
+                this.playerCollision(myPlayer);
 
             }
 
             //left and right
-            this.collison = function() {
+            this.collision = function() {
                 var collision = myGameArea.canvas.width - this.width;
                 if (this.x > collision) {
                     this.x = collision;
@@ -80,7 +92,7 @@
 
             }
             //top and bottom
-            this.collison_1 = function() {
+            this.collision_1 = function() {
                 var collision = myGameArea.canvas.height - this.height
                 if (this.y > collision) {
                     this.y = collision;
@@ -88,8 +100,14 @@
                     this.y = 0;
                 }
             }
-        
+            this.playerCollision = function(otherobj) {
+                if (otherobj.x < myBridge.x) {
+                    otherobj.x = myBridge.x - otherobj.width;
+                }
+            }
+
         }
+
         function updateGameArea() {
             myGameArea.clear();
             myPlayer.speedX = 0;
@@ -109,8 +127,8 @@
             myPlayer.update();
             myBridge.update();
             myPlayer.newPos();
+
         }
-        
     </script>
 </body>
 
