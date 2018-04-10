@@ -14,14 +14,11 @@
     <script>
         var myPlayer;
         var myBridge;
-        var myBackground;
 
         function startGame() {
             //declared as(x,y, color,width,height)
             myPlayer = new component(20, 100, "blue", 30, 30);
             myBridge = new component(150, 150, "red", 100, 100);
-            myBridge = new component(150, 150, "red", 100, 100);
-            myBackground = new component(600, 400, "background.png", 0, 0, "image");
             myGameArea.start();
 
         }
@@ -46,12 +43,7 @@
             }
         }
 
-        function component(x, y, color, width, height, type) {
-            this.type = type;
-            if (type == "image") {
-                this.image = new Image();
-                this.image.src = color;
-            }
+        function component(x, y, color, width, height) {
             this.x = x;
             this.y = y;
             this.speedX = 0;
@@ -62,12 +54,9 @@
             this.gravitySpeed = 10;
             this.update = function() {
                 ctx = myGameArea.context;
-                if (type == "image") {
-                    ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
-                } else {
-                    ctx.fillStyle = color;
-                    ctx.fillRect(this.x, this.y, this.width, this.height);
-                }
+                ctx.fillStyle = color;
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+                
 
             }
             //position
@@ -101,8 +90,8 @@
                 }
             }
             this.playerCollision = function(otherobj) {
-                if (otherobj.x < myBridge.x) {
-                    otherobj.x = myBridge.x - otherobj.width;
+                if (otherobj.y < myBridge.y) {
+                    otherobj.y = myBridge.y - otherobj.height;
                 }
             }
 
