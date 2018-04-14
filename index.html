@@ -66,7 +66,6 @@
                 this.y += this.speedY + this.gravity;
                 this.collision();
                 this.collision_1();
-                this.playerCollision(myPlayer);
 
             }
 
@@ -87,11 +86,6 @@
                     this.y = collision;
                 } else if (this.y < 0) {
                     this.y = 0;
-                }
-            }
-            this.playerCollision = function(otherobj) {
-                if (otherobj.y < myBridge.y) {
-                    otherobj.y = myBridge.y - otherobj.height;
                 }
             }
 
