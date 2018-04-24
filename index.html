@@ -23,21 +23,23 @@
         var powerUp1;
         var powerUp2;
         var powerUp3;
+        var powerUp4;
         var myScore;
         var score = 0;
 
         function startGame() {
             //declared as(x,y, color,width,height,type)
-            myPlayer = new component(20, 100, "blue", 30, 30);
-            obstacle = new component(150, 150, "red", 50, 50);
-            obstacle1 = new component(500, 150, "red", 50, 50);
-            obstacle2 = new component(350, 325, "red", 50, 50);
-            obstacle3 = new component(350, 20, "red", 50, 50);
-            powerUp = new component(270, 150, "green", 25, 25);
-            powerUp1 = new component(30, 30, "green", 25, 25);
-            powerUp2 = new component(550, 350, "green", 25, 25);
-            powerUp3 = new component(500, 30, "green", 25, 25);
-            myScore = new component(530, 10.5, "black", "15px", "Consolas", "text");
+            myPlayer = new component(20, 100, "black", 30, 30);
+            obstacle = new component(100, 180, "red", 50, 50);
+            obstacle1 = new component(450, 180, "red", 50, 50);
+            obstacle2 = new component(270, 325, "red", 50, 50);
+            obstacle3 = new component(250, 20, "red", 50, 50);
+            powerUp = new component(270, 180, "green", 25, 25);
+            powerUp1 = new component(130, 100, "green", 25, 25);
+            powerUp2 = new component(450, 300, "green", 25, 25);
+            powerUp3 = new component(430, 100, "green", 25, 25);
+            powerUp4 = new component(130, 300, "green", 25, 25);
+            myScore = new component(500, 13.5, "black", "20px", "Consolas", "text");
             myGameArea.start();
 
         }
@@ -178,6 +180,10 @@
                 powerUp3.clear();
                 score++;
             }
+            if (myPlayer.crashWith(powerUp4)) {
+                powerUp4.clear();
+                score++;
+            }
             if (myPlayer.crashWith(obstacle) ||
                 myPlayer.crashWith(obstacle1) ||
                 myPlayer.crashWith(obstacle2) ||
@@ -197,6 +203,7 @@
                 powerUp1.update();
                 powerUp2.update();
                 powerUp3.update();
+                powerUp4.update();
                 myPlayer.newPos();
                 myScore.text = "Score :" + score;
                 myScore.update();
