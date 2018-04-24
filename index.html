@@ -7,21 +7,27 @@
 			border: 5px solid black;
 			background: lightskyblue;
 		}
-
 	</style>
 </head>
 
 <body onload="startGame()">
 	<script>
 		var myPlayer;
-		var myBridge;
-		var myBridge1;
+		var obstacle;
+		var obstacle1;
+		var obstacle2;
+		var obstacle3;
+		var obstacle4;
+		var obstacle5;
+		var powerUp;
 
 		function startGame() {
 			//declared as(x,y, color,width,height)
 			myPlayer = new component(20, 100, "blue", 30, 30);
-			myBridge = new component(150, 150, "red", 50, 50);
-			myBridge1 = new component(270, 150, "red", 50, 50);
+			obstacle = new component(150, 150, "red", 50, 50);
+			obstacle1 = new component(450, 150, "red", 50, 50);
+			obstacle2 = new component(350, 325, "red", 50, 50);
+			powerUp = new component(270, 150, "green", 25, 25);
 			myGameArea.start();
 
 		}
@@ -43,6 +49,9 @@
 			},
 			clear: function() {
 				this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			},
+			stop: function() {
+				clearInterval(this.interval);
 			}
 		}
 
@@ -66,7 +75,7 @@
 			this.newPos = function() {
 				this.gravitySpeed += this.gravity;
 				this.x += this.speedX;
-				this.y += this.speedY; // + this.gravity;
+				this.y += this.speedY + this.gravity;
 				this.collision();
 				this.collision_1();
 
@@ -90,7 +99,7 @@
 				} else if (this.y < 0) {
 					this.y = 0;
 				}
-			}
+			} 
 			this.crashWith = function(otherobj) {
 				var myleft = this.x;
 				var myright = this.x + (this.width);
@@ -110,10 +119,11 @@
 				return crash;
 			}
 			this.clear = function() {
-				this.x = 0;
-				this.y = 0;
-				this.width = 0;
-				this.height = 0;
+				this.x = -1;
+				this.y = -1;
+				this.width = -1;
+				this.height = -1;
+
 			}
 
 		}
@@ -136,20 +146,28 @@
 		}
 
 		function updateGameArea() {
-			if ((myPlayer.crashWith(myBridge)) || (myPlayer.crashWith(myBridge1))) {
-				myBridge.clear();
+			if (myPlayer.crashWith(powerUp)) {
+				powerUp.clear();
 				myPlayer.update();
+			}
+			if (myPlayer.crashWith(obstacle) || myPlayer.crashWith(obstacle1)||
+			   myPlayer.crashWith(obstacle2)) {
+				myGameArea.stop();
+				alert("Game over");
 			} else {
+
 				myGameArea.clear();
 				keycodes();
 				myPlayer.update();
-				myBridge.update();
-				myBridge1.update();
+				obstacle.update();
+				obstacle1.update();
+				obstacle2.update();
+				powerUp.update();
 				myPlayer.newPos();
+
 			}
 
 		}
-
 	</script>
 </body>
 
