@@ -1,118 +1,156 @@
 <html>
 
 <head>
-    <title>Rectangle collision</title>
-    <style>
-        canvas {
-            border: 5px solid black;
-            background: lightskyblue;
-        }
-    </style>
+	<title>Rectangle collision</title>
+	<style>
+		canvas {
+			border: 5px solid black;
+			background: lightskyblue;
+		}
+
+	</style>
 </head>
 
 <body onload="startGame()">
-    <script>
-        var myPlayer;
-        var myBridge;
+	<script>
+		var myPlayer;
+		var myBridge;
+		var myBridge1;
 
-        function startGame() {
-            //declared as(x,y, color,width,height)
-            myPlayer = new component(20, 100, "blue", 30, 30);
-            myBridge = new component(150, 150, "red", 100, 100);
-            myGameArea.start();
+		function startGame() {
+			//declared as(x,y, color,width,height)
+			myPlayer = new component(20, 100, "blue", 30, 30);
+			myBridge = new component(150, 150, "red", 50, 50);
+			myBridge1 = new component(270, 150, "red", 50, 50);
+			myGameArea.start();
 
-        }
-        var myGameArea = {
-            canvas: document.createElement("canvas"),
-            start: function() {
-                this.canvas.width = 600;
-                this.canvas.height = 400;
-                this.context = this.canvas.getContext("2d");
-                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-                this.interval = setInterval(updateGameArea, 20);
-                window.addEventListener("keydown", function(e) {
-                    myGameArea.keys = (myGameArea.keys || []);
-                    myGameArea.keys[e.keyCode] = true;
-                })
-                window.addEventListener("keyup", function(e) {
-                    myGameArea.keys[e.keyCode] = false;
-                })
-            },
-            clear: function() {
-                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            }
-        }
+		}
+		var myGameArea = {
+			canvas: document.createElement("canvas"),
+			start: function() {
+				this.canvas.width = 600;
+				this.canvas.height = 400;
+				this.context = this.canvas.getContext("2d");
+				document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+				this.interval = setInterval(updateGameArea, 20);
+				window.addEventListener("keydown", function(e) {
+					myGameArea.keys = (myGameArea.keys || []);
+					myGameArea.keys[e.keyCode] = true;
+				})
+				window.addEventListener("keyup", function(e) {
+					myGameArea.keys[e.keyCode] = false;
+				})
+			},
+			clear: function() {
+				this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			}
+		}
 
-        function component(x, y, color, width, height) {
-            this.x = x;
-            this.y = y;
-            this.speedX = 0;
-            this.speedY = 0;
-            this.width = width;
-            this.height = height;
-            this.gravity = 2;
-            this.gravitySpeed = 10;
-            this.update = function() {
-                ctx = myGameArea.context;
-                ctx.fillStyle = color;
-                ctx.fillRect(this.x, this.y, this.width, this.height);
-                
+		function component(x, y, color, width, height) {
+			this.x = x;
+			this.y = y;
+			this.speedX = 0;
+			this.speedY = 0;
+			this.width = width;
+			this.height = height;
+			this.gravity = 2;
+			this.gravitySpeed = 10;
+			this.update = function() {
+				ctx = myGameArea.context;
+				ctx.fillStyle = color;
+				ctx.fillRect(this.x, this.y, this.width, this.height);
 
-            }
-            //position
-            this.newPos = function() {
-                this.gravitySpeed += this.gravity;
-                this.x += this.speedX;
-                this.y += this.speedY + this.gravity;
-                this.collision();
-                this.collision_1();
 
-            }
+			}
+			//position
+			this.newPos = function() {
+				this.gravitySpeed += this.gravity;
+				this.x += this.speedX;
+				this.y += this.speedY; // + this.gravity;
+				this.collision();
+				this.collision_1();
 
-            //left and right
-            this.collision = function() {
-                var collision = myGameArea.canvas.width - this.width;
-                if (this.x > collision) {
-                    this.x = collision;
-                } else if (this.x < 0) {
-                    this.x = 0;
-                }
+			}
 
-            }
-            //top and bottom
-            this.collision_1 = function() {
-                var collision = myGameArea.canvas.height - this.height
-                if (this.y > collision) {
-                    this.y = collision;
-                } else if (this.y < 0) {
-                    this.y = 0;
-                }
-            }
+			//left and right
+			this.collision = function() {
+				var collision = myGameArea.canvas.width - this.width;
+				if (this.x > collision) {
+					this.x = collision;
+				} else if (this.x < 0) {
+					this.x = 0;
+				}
 
-        }
+			}
+			//top and bottom
+			this.collision_1 = function() {
+				var collision = myGameArea.canvas.height - this.height
+				if (this.y > collision) {
+					this.y = collision;
+				} else if (this.y < 0) {
+					this.y = 0;
+				}
+			}
+			this.crashWith = function(otherobj) {
+				var myleft = this.x;
+				var myright = this.x + (this.width);
+				var mytop = this.y;
+				var mybottom = this.y + (this.height);
+				var otherleft = otherobj.x;
+				var otherright = otherobj.x + (otherobj.width);
+				var othertop = otherobj.y;
+				var otherbottom = otherobj.y + (otherobj.height);
+				var crash = true;
+				if ((mybottom < othertop) ||
+					(mytop > otherbottom) ||
+					(myright < otherleft) ||
+					(myleft > otherright)) {
+					crash = false;
+				}
+				return crash;
+			}
+			this.clear = function() {
+				this.x = 0;
+				this.y = 0;
+				this.width = 0;
+				this.height = 0;
+			}
 
-        function updateGameArea() {
-            myGameArea.clear();
-            myPlayer.speedX = 0;
-            myPlayer.speedY = 0;
-            if ((myGameArea.keys && myGameArea.keys[37]) || (myGameArea.keys && myGameArea.keys[65])) {
-                myPlayer.speedX = -4;
-            }
-            if ((myGameArea.keys && myGameArea.keys[39]) || (myGameArea.keys && myGameArea.keys[68])) {
-                myPlayer.speedX = 4;
-            }
-            if ((myGameArea.keys && myGameArea.keys[38]) || (myGameArea.keys && myGameArea.keys[32])) {
-                myPlayer.speedY = -4;
-            }
-            if ((myGameArea.keys && myGameArea.keys[40]) || (myGameArea.keys && myGameArea.keys[83])) {
-                myPlayer.speedY = 4;
-            }
-            myPlayer.update();
-            myBridge.update();
-            myPlayer.newPos();
+		}
 
-        }
-    </script>
+		function keycodes() {
+			myPlayer.speedX = 0;
+			myPlayer.speedY = 0;
+			if ((myGameArea.keys && myGameArea.keys[37]) || (myGameArea.keys && myGameArea.keys[65])) {
+				myPlayer.speedX = -4;
+			}
+			if ((myGameArea.keys && myGameArea.keys[39]) || (myGameArea.keys && myGameArea.keys[68])) {
+				myPlayer.speedX = 4;
+			}
+			if ((myGameArea.keys && myGameArea.keys[38]) || (myGameArea.keys && myGameArea.keys[32])) {
+				myPlayer.speedY = -4;
+			}
+			if ((myGameArea.keys && myGameArea.keys[40]) || (myGameArea.keys && myGameArea.keys[83])) {
+				myPlayer.speedY = 4;
+			}
+		}
+
+		function updateGameArea() {
+			if ((myPlayer.crashWith(myBridge)) || (myPlayer.crashWith(myBridge1))) {
+				myBridge.clear();
+				myPlayer.update();
+			} else {
+				myGameArea.clear();
+				keycodes();
+				myPlayer.update();
+				myBridge.update();
+				myBridge1.update();
+				myPlayer.newPos();
+			}
+
+		}
+
+	</script>
 </body>
 
 </html>
