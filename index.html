@@ -23,9 +23,11 @@
         var powerUp1;
         var powerUp2;
         var powerUp3;
+        var myScore;
+        var score = 0;
 
         function startGame() {
-            //declared as(x,y, color,width,height)
+            //declared as(x,y, color,width,height,type)
             myPlayer = new component(20, 100, "blue", 30, 30);
             obstacle = new component(150, 150, "red", 50, 50);
             obstacle1 = new component(500, 150, "red", 50, 50);
@@ -35,6 +37,7 @@
             powerUp1 = new component(30, 30, "green", 25, 25);
             powerUp2 = new component(550, 350, "green", 25, 25);
             powerUp3 = new component(500, 30, "green", 25, 25);
+            myScore = new component(530, 10.5, "black", "15px", "Consolas", "text");
             myGameArea.start();
 
         }
@@ -62,7 +65,8 @@
             }
         }
 
-        function component(x, y, color, width, height) {
+        function component(x, y, color, width, height, type) {
+            this.type = type;
             this.x = x;
             this.y = y;
             this.speedX = 0;
@@ -73,9 +77,14 @@
             this.gravitySpeed = 10;
             this.update = function() {
                 ctx = myGameArea.context;
-                ctx.fillStyle = color;
-                ctx.fillRect(this.x, this.y, this.width, this.height);
-
+                if (this.type == "text") {
+                    ctx.font = this.width + " " + this.height;
+                    ctx.fillStyle = color;
+                    ctx.fillText(this.text, this.x, this.y);
+                } else {
+                    ctx.fillStyle = color;
+                    ctx.fillRect(this.x, this.y, this.width, this.height);
+                }
 
             }
             //position
@@ -155,15 +164,19 @@
         function updateGameArea() {
             if (myPlayer.crashWith(powerUp)) {
                 powerUp.clear();
+                score++;
             }
             if (myPlayer.crashWith(powerUp1)) {
                 powerUp1.clear();
+                score++;
             }
             if (myPlayer.crashWith(powerUp2)) {
                 powerUp2.clear();
+                score++;
             }
             if (myPlayer.crashWith(powerUp3)) {
                 powerUp3.clear();
+                score++;
             }
             if (myPlayer.crashWith(obstacle) ||
                 myPlayer.crashWith(obstacle1) ||
@@ -185,7 +198,8 @@
                 powerUp2.update();
                 powerUp3.update();
                 myPlayer.newPos();
-
+                myScore.text = "Score :" + score;
+                myScore.update();
             }
 
         }
