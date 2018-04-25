@@ -1,216 +1,239 @@
 <html>
 
 <head>
-    <title>Rectangle collision</title>
-    <style>
-        canvas {
-            border: 5px solid black;
-            background: lightskyblue;
-        }
-    </style>
+	<title>Rectangle collision</title>
+	<style>
+		canvas {
+			border: 5px solid black;
+			background: skyblue;
+		}
+
+	</style>
 </head>
 
 <body onload="startGame()">
-    <script>
-        var myPlayer;
-        var obstacle;
-        var obstacle1;
-        var obstacle2;
-        var obstacle3;
-        var obstacle4;
-        var obstacle5;
-        var powerUp;
-        var powerUp1;
-        var powerUp2;
-        var powerUp3;
-        var powerUp4;
-        var myScore;
-        var score = 0;
+	<script>
+		var myPlayer;
+		var obstacle;
+		var obstacle1;
+		var obstacle2;
+		var obstacle3;
+		var obstacle4;
+		var obstacle5;
+		var powerUp;
+		var powerUp1;
+		var powerUp2;
+		var powerUp3;
+		var powerUp4;
+		var myScore;
+		var score = 0;
+		var objective;
 
-        function startGame() {
-            //declared as(x,y, color,width,height,type)
-            myPlayer = new component(20, 100, "black", 30, 30);
-            obstacle = new component(100, 180, "red", 50, 50);
-            obstacle1 = new component(450, 180, "red", 50, 50);
-            obstacle2 = new component(270, 325, "red", 50, 50);
-            obstacle3 = new component(250, 20, "red", 50, 50);
-            powerUp = new component(270, 180, "green", 25, 25);
-            powerUp1 = new component(130, 100, "green", 25, 25);
-            powerUp2 = new component(450, 300, "green", 25, 25);
-            powerUp3 = new component(430, 100, "green", 25, 25);
-            powerUp4 = new component(130, 300, "green", 25, 25);
-            myScore = new component(500, 13.5, "black", "20px", "Consolas", "text");
-            myGameArea.start();
+		function startGame() {
+			//declared as(x,y, color,width,height,type)
+			myPlayer = new component(20, 100, "black", 30, 30);
+			obstacle = new component(100, 180, "red", 50, 50);
+			obstacle1 = new component(450, 180, "red", 50, 50);
+			obstacle2 = new component(270, 325, "red", 50, 50);
+			obstacle3 = new component(250, 20, "red", 50, 50);
+			powerUp = new component(270, 180, "green", 25, 25);
+			powerUp1 = new component(130, 100, "green", 25, 25);
+			powerUp2 = new component(450, 300, "green", 25, 25);
+			powerUp3 = new component(430, 100, "green", 25, 25);
+			powerUp4 = new component(130, 300, "green", 25, 25);
+			myScore = new component(500, 13.5, "black", "20px", "Consolas", "text");
+			objective = new component(5, 12, "black", "15px", "Consolas", "text");
+			myGameArea.start();
+			objective();
 
-        }
-        var myGameArea = {
-            canvas: document.createElement("canvas"),
-            start: function() {
-                this.canvas.width = 600;
-                this.canvas.height = 400;
-                this.context = this.canvas.getContext("2d");
-                document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-                this.interval = setInterval(updateGameArea, 20);
-                window.addEventListener("keydown", function(e) {
-                    myGameArea.keys = (myGameArea.keys || []);
-                    myGameArea.keys[e.keyCode] = true;
-                })
-                window.addEventListener("keyup", function(e) {
-                    myGameArea.keys[e.keyCode] = false;
-                })
-            },
-            clear: function() {
-                this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            },
-            stop: function() {
-                clearInterval(this.interval);
-            }
-        }
+		}
+		var myGameArea = {
+			canvas: document.createElement("canvas"),
+			start: function() {
+				this.canvas.width = 600;
+				this.canvas.height = 400;
+				this.context = this.canvas.getContext("2d");
+				this.context.font = "20px Arial";
+				this.context.fillText("Objective : collect green rectangles", 10, 10);
+				document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+				this.interval = setInterval(updateGameArea, 20);
+				window.addEventListener("keydown", function(e) {
+					myGameArea.keys = (myGameArea.keys || []);
+					myGameArea.keys[e.keyCode] = true;
+				})
+				window.addEventListener("keyup", function(e) {
+					myGameArea.keys[e.keyCode] = false;
+				})
+			},
+			clear: function() {
+				this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			},
+			stop: function() {
+				clearInterval(this.interval);
+			}
+		}
 
-        function component(x, y, color, width, height, type) {
-            this.type = type;
-            this.x = x;
-            this.y = y;
-            this.speedX = 0;
-            this.speedY = 0;
-            this.width = width;
-            this.height = height;
-            this.gravity = 2;
-            this.gravitySpeed = 10;
-            this.update = function() {
-                ctx = myGameArea.context;
-                if (this.type == "text") {
-                    ctx.font = this.width + " " + this.height;
-                    ctx.fillStyle = color;
-                    ctx.fillText(this.text, this.x, this.y);
-                } else {
-                    ctx.fillStyle = color;
-                    ctx.fillRect(this.x, this.y, this.width, this.height);
-                }
+		function component(x, y, color, width, height, type) {
+			this.type = type;
+			this.x = x;
+			this.y = y;
+			this.speedX = 0;
+			this.speedY = 0;
+			this.width = width;
+			this.height = height;
+			this.gravity = 2;
+			this.gravitySpeed = 10;
+			this.update = function() {
+				ctx = myGameArea.context;
+				if (this.type == "text") {
+					ctx.font = this.width + " " + this.height;
+					ctx.fillStyle = color;
+					ctx.fillText(this.text, this.x, this.y);
+				} else {
+					ctx.fillStyle = color;
+					ctx.fillRect(this.x, this.y, this.width, this.height);
+				}
 
-            }
-            //position
-            this.newPos = function() {
-                this.gravitySpeed += this.gravity;
-                this.x += this.speedX;
-                this.y += this.speedY + this.gravity;
-                this.collision();
-                this.collision_1();
+			}
+			//position
+			this.newPos = function() {
+				this.gravitySpeed += this.gravity;
+				this.x += this.speedX;
+				this.y += this.speedY + this.gravity;
+				this.collision();
+				this.collision_1();
 
-            }
+			}
 
-            //left and right
-            this.collision = function() {
-                var collision = myGameArea.canvas.width - this.width;
-                if (this.x > collision) {
-                    this.x = collision;
-                } else if (this.x < 0) {
-                    this.x = 0;
-                }
+			//left and right
+			this.collision = function() {
+				var collision = myGameArea.canvas.width - this.width;
+				if (this.x > collision) {
+					this.x = collision;
+				} else if (this.x < 0) {
+					this.x = 0;
+				}
 
-            }
-            //top and bottom
-            this.collision_1 = function() {
-                var collision = myGameArea.canvas.height - this.height
-                if (this.y > collision) {
-                    this.y = collision;
-                } else if (this.y < 0) {
-                    this.y = 0;
-                }
-            }
-            this.crashWith = function(otherobj) {
-                var myleft = this.x;
-                var myright = this.x + (this.width);
-                var mytop = this.y;
-                var mybottom = this.y + (this.height);
-                var otherleft = otherobj.x;
-                var otherright = otherobj.x + (otherobj.width);
-                var othertop = otherobj.y;
-                var otherbottom = otherobj.y + (otherobj.height);
-                var crash = true;
-                if ((mybottom < othertop) ||
-                    (mytop > otherbottom) ||
-                    (myright < otherleft) ||
-                    (myleft > otherright)) {
-                    crash = false;
-                }
-                return crash;
-            }
-            this.clear = function() {
-                this.x = -1;
-                this.y = -1;
-                this.width = -1;
-                this.height = -1;
+			}
+			//top and bottom
+			this.collision_1 = function() {
+				var collision = myGameArea.canvas.height - this.height
+				if (this.y > collision) {
+					this.y = collision;
+				} else if (this.y < 0) {
+					this.y = 0;
+				}
+			}
+			this.crashWith = function(otherobj) {
+				var myleft = this.x;
+				var myright = this.x + (this.width);
+				var mytop = this.y;
+				var mybottom = this.y + (this.height);
+				var otherleft = otherobj.x;
+				var otherright = otherobj.x + (otherobj.width);
+				var othertop = otherobj.y;
+				var otherbottom = otherobj.y + (otherobj.height);
+				var crash = true;
+				if ((mybottom < othertop) ||
+					(mytop > otherbottom) ||
+					(myright < otherleft) ||
+					(myleft > otherright)) {
+					crash = false;
+				}
+				return crash;
+			}
+			this.clear = function() {
+				this.x = -1;
+				this.y = -1;
+				this.width = -1;
+				this.height = -1;
 
-            }
+			}
 
-        }
+		}
 
-        function keycodes() {
-            myPlayer.speedX = 0;
-            myPlayer.speedY = 0;
-            if ((myGameArea.keys && myGameArea.keys[37]) || (myGameArea.keys && myGameArea.keys[65])) {
-                myPlayer.speedX = -4;
-            }
-            if ((myGameArea.keys && myGameArea.keys[39]) || (myGameArea.keys && myGameArea.keys[68])) {
-                myPlayer.speedX = 4;
-            }
-            if ((myGameArea.keys && myGameArea.keys[38]) || (myGameArea.keys && myGameArea.keys[32])) {
-                myPlayer.speedY = -4;
-            }
-            if ((myGameArea.keys && myGameArea.keys[40]) || (myGameArea.keys && myGameArea.keys[83])) {
-                myPlayer.speedY = 4;
-            }
-        }
+		function keycodes() {
+			myPlayer.speedX = 0;
+			myPlayer.speedY = 0;
+			if ((myGameArea.keys && myGameArea.keys[37]) || (myGameArea.keys && myGameArea.keys[65])) {
+				myPlayer.speedX = -4;
+			}
+			if ((myGameArea.keys && myGameArea.keys[39]) || (myGameArea.keys && myGameArea.keys[68])) {
+				myPlayer.speedX = 4;
+			}
+			if ((myGameArea.keys && myGameArea.keys[38]) || (myGameArea.keys && myGameArea.keys[32])) {
+				myPlayer.speedY = -4;
+			}
+			if ((myGameArea.keys && myGameArea.keys[40]) || (myGameArea.keys && myGameArea.keys[83])) {
+				myPlayer.speedY = 4;
+			}
+		}
 
-        function updateGameArea() {
-            if (myPlayer.crashWith(powerUp)) {
-                powerUp.clear();
-                score++;
-            }
-            if (myPlayer.crashWith(powerUp1)) {
-                powerUp1.clear();
-                score++;
-            }
-            if (myPlayer.crashWith(powerUp2)) {
-                powerUp2.clear();
-                score++;
-            }
-            if (myPlayer.crashWith(powerUp3)) {
-                powerUp3.clear();
-                score++;
-            }
-            if (myPlayer.crashWith(powerUp4)) {
-                powerUp4.clear();
-                score++;
-            }
-            if (myPlayer.crashWith(obstacle) ||
-                myPlayer.crashWith(obstacle1) ||
-                myPlayer.crashWith(obstacle2) ||
-                myPlayer.crashWith(obstacle3)) {
-                myGameArea.stop();
-                alert("Game over");
-            } else {
+		function gameOver() {
+			if (score == 5) {
+				myGameArea.clear();
+				ctx.font = "45px Arial";
+				ctx.textAlign = "center";
+				ctx.strokeText("Thank you for Playing", myGameArea.canvas.width / 2, myGameArea.canvas.height / 2);
+			}
 
-                myGameArea.clear();
-                keycodes();
-                myPlayer.update();
-                obstacle.update();
-                obstacle1.update();
-                obstacle2.update();
-                obstacle3.update();
-                powerUp.update();
-                powerUp1.update();
-                powerUp2.update();
-                powerUp3.update();
-                powerUp4.update();
-                myPlayer.newPos();
-                myScore.text = "Score :" + score;
-                myScore.update();
-            }
+		}
 
-        }
-    </script>
+
+		function updateGameArea() {
+			if (myPlayer.crashWith(powerUp)) {
+				powerUp.clear();
+				score++;
+			}
+			if (myPlayer.crashWith(powerUp1)) {
+				powerUp1.clear();
+				score++;
+			}
+			if (myPlayer.crashWith(powerUp2)) {
+				powerUp2.clear();
+				score++;
+			}
+			if (myPlayer.crashWith(powerUp3)) {
+				powerUp3.clear();
+				score++;
+			}
+			if (myPlayer.crashWith(powerUp4)) {
+				powerUp4.clear();
+				score++;
+			}
+			if (myPlayer.crashWith(obstacle) ||
+				myPlayer.crashWith(obstacle1) ||
+				myPlayer.crashWith(obstacle2) ||
+				myPlayer.crashWith(obstacle3)) {
+				myGameArea.stop();
+				ctx.font = "50px Arial";
+				ctx.textAlign = "center";
+				ctx.strokeText("Game Over", myGameArea.canvas.width / 2, myGameArea.canvas.height / 2);
+
+			} else {
+				myGameArea.clear();
+				keycodes();
+				myPlayer.update();
+				obstacle.update();
+				obstacle1.update();
+				obstacle2.update();
+				obstacle3.update();
+				powerUp.update();
+				powerUp1.update();
+				powerUp2.update();
+				powerUp3.update();
+				powerUp4.update();
+				myPlayer.newPos();
+				myScore.text = "Score :" + score;
+				myScore.update();
+				objective.text = "Objective:Collect Green";
+				objective.update();
+				gameOver();
+			}
+
+		}
+
+	</script>
 </body>
 
 </html>
