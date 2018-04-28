@@ -8,10 +8,18 @@
 			background: skyblue;
 		}
 
+		h1 {
+			margin: 0px;
+			position: relative;
+			margin-left: 270px;
+			color: darkblue;
+
+		}
 	</style>
 </head>
 
 <body onload="startGame()">
+	<h1>Click</h1>
 	<script>
 		var myPlayer;
 		var obstacle;
@@ -45,7 +53,6 @@
 			objective = new component(5, 12, "black", "15px", "Consolas", "text");
 			myGameArea.start();
 			objective();
-
 		}
 		var myGameArea = {
 			canvas: document.createElement("canvas"),
@@ -180,6 +187,7 @@
 		}
 
 
+
 		function updateGameArea() {
 			if (myPlayer.crashWith(powerUp)) {
 				powerUp.clear();
@@ -232,7 +240,6 @@
 			}
 
 		}
-
 	</script>
 </body>
 
